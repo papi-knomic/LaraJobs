@@ -2,38 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateListingRequest;
+use App\Http\Requests\UpdateListingStatusRequest;
 use App\Models\Listing;
+use App\Repositories\ListingRepository;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ListingController extends Controller
 {
+    private ListingRepository $listingRepository;
+
+
+    public function __construct(ListingRepository $listingRepository)
+    {
+        $this->listingRepository = $listingRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function index()
+    public function index() : JsonResponse
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param CreateListingRequest $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(CreateListingRequest $request) : JsonResponse
     {
         //
     }
@@ -41,33 +45,23 @@ class ListingController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Listing  $listing
-     * @return \Illuminate\Http\Response
+     * @param Listing $listing
+     * @return JsonResponse
      */
-    public function show(Listing $listing)
+    public function show(Listing $listing) : JsonResponse
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Listing  $listing
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Listing $listing)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Listing  $listing
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Listing $listing
+     * @return JsonResponse
      */
-    public function update(Request $request, Listing $listing)
+    public function update(Request $request, Listing $listing) : JsonResponse
     {
         //
     }
@@ -75,11 +69,23 @@ class ListingController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Listing  $listing
-     * @return \Illuminate\Http\Response
+     * @param Listing $listing
+     * @return JsonResponse
      */
-    public function destroy(Listing $listing)
+    public function destroy(Listing $listing) : JsonResponse
     {
         //
+    }
+
+    /**
+     * Update status of listing
+     *
+     * @param Listing $listing
+     * @param UpdateListingStatusRequest $request
+     * @return JsonResponse
+     */
+    public function updateStatus(Listing $listing, UpdateListingStatusRequest $request ) : JsonResponse
+    {
+
     }
 }

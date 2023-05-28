@@ -2,6 +2,8 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CheckAdminRole;
+use App\Http\Middleware\CheckSuperAdminRole;
 use App\Http\Middleware\ForceJsonResponse;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -54,6 +56,7 @@ class Kernel extends HttpKernel
      * @var array<string, class-string|string>
      */
     protected $routeMiddleware = [
+        'admin' => CheckAdminRole::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
@@ -63,6 +66,7 @@ class Kernel extends HttpKernel
         'json' => ForceJsonResponse::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
         'signed' => \App\Http\Middleware\ValidateSignature::class,
+        'super_admin' => CheckSuperAdminRole::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
