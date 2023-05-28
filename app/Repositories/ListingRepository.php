@@ -10,7 +10,11 @@ class ListingRepository implements ListingInterface
 
     public function create(array $data)
     {
-        // TODO: Implement create() method.
+        if ( !auth()->user() ) {
+            $data['status'] = 'draft';
+        }
+
+        return Listing::create($data);
     }
 
     public function update(Listing $listing, array $data)
@@ -20,7 +24,7 @@ class ListingRepository implements ListingInterface
 
     public function updateStatus(Listing $listing, string $status)
     {
-        // TODO: Implement updateStatus() method.
+        return $listing->update(['status' => $status]);
     }
 
     public function findMany()
@@ -30,6 +34,6 @@ class ListingRepository implements ListingInterface
 
     public function delete(Listing $listing)
     {
-        // TODO: Implement delete() method.
+       return $listing->delete();
     }
 }

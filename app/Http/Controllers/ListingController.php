@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateListingRequest;
+use App\Http\Requests\UpdateListingRequest;
 use App\Http\Requests\UpdateListingStatusRequest;
 use App\Models\Listing;
 use App\Repositories\ListingRepository;
+use App\Traits\Response;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class ListingController extends Controller
 {
@@ -39,7 +39,10 @@ class ListingController extends Controller
      */
     public function store(CreateListingRequest $request) : JsonResponse
     {
-        //
+        $fields = $request->validated();
+        $listing = $this->listingRepository->create($fields);
+
+        return Response::successResponseWithData($listing);
     }
 
     /**
@@ -57,11 +60,11 @@ class ListingController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param UpdateListingRequest $request
      * @param Listing $listing
      * @return JsonResponse
      */
-    public function update(Request $request, Listing $listing) : JsonResponse
+    public function update(UpdateListingRequest $request, Listing $listing) : JsonResponse
     {
         //
     }

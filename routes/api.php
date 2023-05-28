@@ -50,7 +50,7 @@ Route::group(['middleware' => ['json', 'throttle:60,1']], function () {
             //Create Listing
             Route::post('/', [ListingController::class, 'store'])->name('listing.create');
             //update listing
-            Route::put('/{listing}', [ListingController::class, 'update'])->name('listing.update');
+            Route::patch('/{listing}', [ListingController::class, 'update'])->name('listing.update');
             //Change Listing Status
             Route::post('/{listing}/status', [ListingController::class, 'updateStatus'])->name('listing.update.status');
             //delete listing
