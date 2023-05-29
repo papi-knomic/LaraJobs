@@ -19,7 +19,7 @@ class ListingRepository implements ListingInterface
 
     public function update(Listing $listing, array $data)
     {
-        // TODO: Implement update() method.
+        return $listing->update($data);
     }
 
     public function updateStatus(Listing $listing, string $status)
@@ -27,9 +27,10 @@ class ListingRepository implements ListingInterface
         return $listing->update(['status' => $status]);
     }
 
-    public function findMany()
+    public function findMany(array $filters, string $status)
     {
-        // TODO: Implement findMany() method.
+        $remote = $filters['remote'];
+        return Listing::whereStatus($status)->filter($filters, $remote)->paginate(10);
     }
 
     public function delete(Listing $listing)

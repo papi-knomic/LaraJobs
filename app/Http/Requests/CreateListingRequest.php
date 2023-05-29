@@ -27,11 +27,12 @@ class CreateListingRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'location' => 'required|string|max:155',
+            'remote' => 'boolean',
             'company_name' => 'required|string',
             'company_email' => 'required|string|email',
             'url' => 'required|string|url',
             'tags' => 'required|string',
-            'description' => 'required|string|max:255',
+            'description' => 'required|string',
             'status' => ['string', Rule::in(['draft', 'published'])]
         ];
     }

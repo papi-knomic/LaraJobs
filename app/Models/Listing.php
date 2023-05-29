@@ -11,15 +11,22 @@ class Listing extends Model
 
     protected $guarded = ['id'];
 
-    public function scopeFilter($query, array $filters)
+    public function scopeFilter($query, array $filters, bool $remote = false)
     {
-        $query->when($filters['search'] ?? false, function ($query) use ($filters) {
-            $query->where(function ($query) use ($filters) {
-                $query->where('tags', 'like', '%' . $filters['tag'] . '%')
-                    ->orWhere('title', 'like', '%' . $filters['search'] . '%')
-                    ->orWhere('description', 'like', '%' . $filters['search'] . '%')
-                    ->orWhere('tags', 'like', '%' . $filters['search'] . '%');
-            });
+        $query->when( $remote, function ($query){
+            $query->where('remote', true);
+        },  function ($query) {
+            $query->latest('created_at');
+        });
+
+        $query->when($filters['tag'] ?? false, function ($query) use($filters) {
+            $query->where('tags', 'like', '%' . $filters['tag'] . '%');
+        });
+
+        $query->when($filters['search'] ?? false, function ($query) use($filters) {
+            $query->where('title', 'like', '%' . $filters['search'] . '%')
+                ->orWhere('description', 'like', '%' . $filters['search'] . '%')
+                ->orWhere('tags', 'like', '%' . $filters['search'] . '%');
         });
     }
 

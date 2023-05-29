@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateListingRequest;
 use App\Http\Requests\UpdateListingRequest;
-use App\Http\Requests\UpdateListingStatusRequest;
+use App\Http\Resources\ListingResource;
 use App\Models\Listing;
 use App\Repositories\ListingRepository;
 use App\Traits\Response;
@@ -27,7 +27,16 @@ class ListingController extends Controller
      */
     public function index() : JsonResponse
     {
-        //
+        $filters = [
+            'tag' => request('tag'),
+            'search' => request('search'),
+            'remote' => request('remote', 0)
+        ];
+
+        $listings = $this->listingRepository->findMany($filters, 'published');
+        $listings = ListingResource::collection($listings);
+
+        return Response::successResponseWithData($listings);
     }
 
 
@@ -41,6 +50,7 @@ class ListingController extends Controller
     {
         $fields = $request->validated();
         $listing = $this->listingRepository->create($fields);
+        $listing = new ListingResource($listing);
 
         return Response::successResponseWithData($listing);
     }
@@ -53,7 +63,9 @@ class ListingController extends Controller
      */
     public function show(Listing $listing) : JsonResponse
     {
-        //
+        $listing = new ListingResource($listing);
+
+        return Response::successResponseWithData($listing);
     }
 
 
@@ -66,7 +78,15 @@ class ListingController extends Controller
      */
     public function update(UpdateListingRequest $request, Listing $listing) : JsonResponse
     {
-        //
+        $fields = $request->validated();
+        $update = $this->listingRepository->update($listing, $fields);
+
+        if (!$update) {
+            return Response::errorResponse();
+        }
+        $listing = new ListingResource($listing);
+
+        return Response::successResponseWithData($listing);
     }
 
     /**
@@ -77,18 +97,8 @@ class ListingController extends Controller
      */
     public function destroy(Listing $listing) : JsonResponse
     {
-        //
-    }
+        $this->listingRepository->delete($listing);
 
-    /**
-     * Update status of listing
-     *
-     * @param Listing $listing
-     * @param UpdateListingStatusRequest $request
-     * @return JsonResponse
-     */
-    public function updateStatus(Listing $listing, UpdateListingStatusRequest $request ) : JsonResponse
-    {
-
+        return Response::successResponse('Listing has been successfully deleted');
     }
 }

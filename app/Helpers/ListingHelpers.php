@@ -10,7 +10,6 @@ if (!function_exists('generateListingSlug')) {
         $count = Listing::where('slug', 'LIKE', "%$slug%")->count();
 
         if ( $count ){
-            $count += 1;
             return "$slug-{$count}";
         }
         return $slug;

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateListingRequest extends FormRequest
 {
@@ -13,7 +14,7 @@ class UpdateListingRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return (bool)auth()->user();
     }
 
     /**
@@ -24,7 +25,15 @@ class UpdateListingRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'string|max:255',
+            'location' => 'string|max:155',
+            'remote' => 'boolean',
+            'company_name' => 'string',
+            'company_email' => 'string|email',
+            'url' => 'string|url',
+            'tags' => 'string',
+            'description' => 'string',
+            'status' => ['string', Rule::in(['draft', 'published'])]
         ];
     }
 }

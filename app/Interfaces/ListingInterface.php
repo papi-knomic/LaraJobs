@@ -10,7 +10,7 @@ interface ListingInterface
      * Find and filter listings
      * @return mixed
      */
-    public function findMany();
+    public function findMany(array $filters, string $status);
 
     /**
      * Create listing

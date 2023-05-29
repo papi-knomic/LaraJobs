@@ -26,8 +26,14 @@ Route::group(['middleware' => ['json', 'throttle:60,1']], function () {
     //login
     Route::post('login', [AuthController::class, 'login'])->name('login');
 
+    //get listings
+    Route::get('listings', [ListingController::class, 'index']);
+
     //get listing
     Route::get('listing/{listing}', [ListingController::class, 'show'])->name('listing.show');
+
+    //Create Listing
+    Route::post('listing', [ListingController::class, 'store'])->name('listing.create');
 
     //protected routes
     Route::group(['middleware' => ['auth:sanctum']], function () {
@@ -47,10 +53,8 @@ Route::group(['middleware' => ['json', 'throttle:60,1']], function () {
         });
 
         Route::prefix('listing')->group(function (){
-            //Create Listing
-            Route::post('/', [ListingController::class, 'store'])->name('listing.create');
             //update listing
-            Route::patch('/{listing}', [ListingController::class, 'update'])->name('listing.update');
+            Route::post('/{listing}', [ListingController::class, 'update'])->name('listing.update');
             //Change Listing Status
             Route::post('/{listing}/status', [ListingController::class, 'updateStatus'])->name('listing.update.status');
             //delete listing
