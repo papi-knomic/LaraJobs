@@ -47,10 +47,10 @@ Route::group(['middleware' => ['json', 'throttle:60,1']], function () {
             Route::post('/draft', [ListingController::class, 'bulkDraft'])->name('listings.bulkDraft');
         });
 
-        Route::post('listing/{listing}/restore', [ListingController::class, 'restore'])->name('listing.restore')->withTrashed();
 
         Route::prefix('listing')->group(function () {
             Route::post('/{listing}', [ListingController::class, 'update'])->name('listing.update');
+            Route::post('/{listing}/restore', [ListingController::class, 'restore'])->name('listing.restore')->withTrashed();
             Route::delete('/{listing}', [ListingController::class, 'destroy'])->name('listing.delete');
         });
 

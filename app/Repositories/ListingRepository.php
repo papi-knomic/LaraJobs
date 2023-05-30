@@ -51,6 +51,6 @@ class ListingRepository implements ListingInterface
 
     public function changeStatusMultiple(array $listingIds, string $status)
     {
-        Listing::whereIn('id', $listingIds)->update(['status' => 'published']);
+        Listing::whereIn('id', $listingIds)->update(['status' => $status]);
     }
 }

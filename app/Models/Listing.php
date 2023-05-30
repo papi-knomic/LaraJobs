@@ -35,4 +35,9 @@ class Listing extends Model
     {
         return $this->where('slug', $value)->orWhere('id', $value)->firstOrFail();
     }
+
+    public function getIsPublishedAttribute(): bool
+    {
+        return $this->status === "published";
+    }
 }

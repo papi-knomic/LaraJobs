@@ -65,7 +65,7 @@ class ListingController extends Controller
      */
     public function show(Listing $listing) : JsonResponse
     {
-        if ($listing->trashed() && !auth()->check()) {
+        if ( ($listing->trashed() || !$listing->is_published ) && !auth()->check()) {
             throw new NotFoundHttpException();
         }
 
