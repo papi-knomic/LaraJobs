@@ -9,6 +9,8 @@ use App\Models\Listing;
 use App\Repositories\ListingRepository;
 use App\Traits\Response;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ListingController extends Controller
 {
@@ -63,6 +65,10 @@ class ListingController extends Controller
      */
     public function show(Listing $listing) : JsonResponse
     {
+        if ($listing->trashed() && !auth()->check()) {
+            throw new NotFoundHttpException();
+        }
+
         $listing = new ListingResource($listing);
 
         return Response::successResponseWithData($listing);
@@ -100,5 +106,63 @@ class ListingController extends Controller
         $this->listingRepository->delete($listing);
 
         return Response::successResponse('Listing has been successfully deleted');
+    }
+
+    public function getListings(Request $request) : JsonResponse
+    {
+        $status = request('status', 'published');
+
+        if ( $status !== 'deleted' ) {
+            $listings = $this->listingRepository->findMany([], $status);
+        } else{
+            $listings = Listing::onlyTrashed()->get();
+        }
+        $listings = ListingResource::collection($listings);
+
+        return Response::successResponseWithData($listings);
+    }
+
+    public function restore(Listing $listing) : JsonResponse
+    {
+        $listing->restore();
+        $listing = new ListingResource($listing);
+
+        return Response::successResponseWithData($listing);
+    }
+
+    public function bulkDelete(Request $request) : JsonResponse
+    {
+        $listingIds = $request->input('listing_ids', []);
+
+        $this->listingRepository->deleteMultiple($listingIds);
+
+        return Response::successResponse('Listings have been deleted');
+    }
+
+    public function bulkRestore(Request $request): JsonResponse
+    {
+        $listingIds = $request->input('listing_ids', []);
+
+        $this->listingRepository->restoreMultiple($listingIds);
+
+        return Response::successResponse('Listings have been restored');
+    }
+
+    public function bulkPublish(Request $request): JsonResponse
+    {
+        $listingIds = $request->input('listing_ids', []);
+
+        $this->listingRepository->changeStatusMultiple($listingIds, 'published');
+
+        return Response::successResponse('Listings have been published');
+    }
+
+    public function bulkDraft(Request $request): JsonResponse
+    {
+        $listingIds = $request->input('listing_ids', []);
+
+        $this->listingRepository->changeStatusMultiple($listingIds, 'draft');
+
+        return Response::successResponse('Listings have been drafted');
     }
 }

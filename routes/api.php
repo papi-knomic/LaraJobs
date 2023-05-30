@@ -23,45 +23,37 @@ Route::group(['middleware' => ['json', 'throttle:60,1']], function () {
         return Response::successResponse('Welcome');
     });
 
-    //login
     Route::post('login', [AuthController::class, 'login'])->name('login');
-
-    //get listings
     Route::get('listings', [ListingController::class, 'index']);
-
-    //get listing
-    Route::get('listing/{listing}', [ListingController::class, 'show'])->name('listing.show');
-
-    //Create Listing
+    Route::get('listing/{listing}', [ListingController::class, 'show'])->name('listing.show')->withTrashed();
     Route::post('listing', [ListingController::class, 'store'])->name('listing.create');
 
-    //protected routes
     Route::group(['middleware' => ['auth:sanctum']], function () {
-        //super admin routes
         Route::group(['middleware' => ['super_admin']], function () {
-            // user route group
             Route::prefix('user')->group(function () {
-                //get single user
-               Route::get('/{user}', [AuthController::class, 'show']);
-               //delete user
+                Route::get('/{user}', [AuthController::class, 'show']);
                 Route::delete('/{user}', [AuthController::class, 'delete']);
             });
-            //get users
+
             Route::get('users', [AuthController::class, 'index'])->name('users');
-            //create user
             Route::post('register', [AuthController::class, 'register'])->name('create.user');
         });
 
-        Route::prefix('listing')->group(function (){
-            //update listing
+        Route::prefix('listings')->group(function () {
+            Route::get('/{status}', [ListingController::class, 'getListings']);
+            Route::post('/delete', [ListingController::class, 'bulkDelete'])->name('listings.bulkDelete');
+            Route::post('/restore', [ListingController::class, 'bulkRestore'])->name('listings.bulkRestore');
+            Route::post('/publish', [ListingController::class, 'bulkPublish'])->name('listings.bulkPublish');
+            Route::post('/draft', [ListingController::class, 'bulkDraft'])->name('listings.bulkDraft');
+        });
+
+        Route::post('listing/{listing}/restore', [ListingController::class, 'restore'])->name('listing.restore')->withTrashed();
+
+        Route::prefix('listing')->group(function () {
             Route::post('/{listing}', [ListingController::class, 'update'])->name('listing.update');
-            //Change Listing Status
-            Route::post('/{listing}/status', [ListingController::class, 'updateStatus'])->name('listing.update.status');
-            //delete listing
             Route::delete('/{listing}', [ListingController::class, 'destroy'])->name('listing.delete');
         });
 
-        //logout
         Route::get('logout', [AuthController::class, 'logout']);
     });
 });

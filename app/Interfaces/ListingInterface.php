@@ -41,4 +41,22 @@ interface ListingInterface
      * @return mixed
      */
     public function delete(Listing $listing);
+
+    /**
+     * @param array $listingIds
+     * @return mixed
+     */
+    public function restoreMultiple(array $listingIds);
+
+    /**
+     * @param array $listingIds
+     * @return mixed
+     */
+    public function deleteMultiple(array $listingIds);
+
+    /**
+     * @param array $listingIds
+     * @return mixed
+     */
+    public function changeStatusMultiple(array $listingIds, string $status);
 }
