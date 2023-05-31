@@ -13,7 +13,7 @@ class CreateUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user() && auth()->user()->is_super_admin;
+        return auth()->check() && auth()->user()->is_super_admin;
     }
 
     /**

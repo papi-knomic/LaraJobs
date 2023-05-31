@@ -36,7 +36,7 @@ class ListingController extends Controller
         ];
 
         $listings = $this->listingRepository->findMany($filters, 'published');
-        $listings = ListingResource::collection($listings);
+        $listings = ListingResource::collection($listings)->response()->getData(true);;
 
         return Response::successResponseWithData($listings);
     }
@@ -117,7 +117,7 @@ class ListingController extends Controller
         } else{
             $listings = Listing::onlyTrashed()->get();
         }
-        $listings = ListingResource::collection($listings);
+        $listings = ListingResource::collection($listings)->response()->getData(true);
 
         return Response::successResponseWithData($listings);
     }

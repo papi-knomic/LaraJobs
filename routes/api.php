@@ -19,8 +19,9 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group(['middleware' => ['json', 'throttle:60,1']], function () {
+
     Route::get('/', function () {
-        return Response::successResponse('Welcome');
+        return Response::successResponse('Welcome to PHP Job Board');
     });
 
     Route::post('login', [AuthController::class, 'login'])->name('login');
@@ -29,6 +30,7 @@ Route::group(['middleware' => ['json', 'throttle:60,1']], function () {
     Route::post('listing', [ListingController::class, 'store'])->name('listing.create');
 
     Route::group(['middleware' => ['auth:sanctum']], function () {
+
         Route::group(['middleware' => ['super_admin']], function () {
             Route::prefix('user')->group(function () {
                 Route::get('/{user}', [AuthController::class, 'show']);
@@ -46,7 +48,6 @@ Route::group(['middleware' => ['json', 'throttle:60,1']], function () {
             Route::post('/publish', [ListingController::class, 'bulkPublish'])->name('listings.bulkPublish');
             Route::post('/draft', [ListingController::class, 'bulkDraft'])->name('listings.bulkDraft');
         });
-
 
         Route::prefix('listing')->group(function () {
             Route::post('/{listing}', [ListingController::class, 'update'])->name('listing.update');

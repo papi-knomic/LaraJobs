@@ -32,7 +32,7 @@ class AuthController extends Controller
     public function index() : JsonResponse
     {
         $users = $this->userRepository->findMany();
-        $users = UserResource::collection($users)->response()->getData();
+        $users = UserResource::collection($users)->response()->getData(true);
 
         return Response::successResponseWithData($users);
     }
